@@ -185,7 +185,7 @@ byte panHeading_XY[2][npanels]; // = { 16,12 };
 //byte panMavBeat_XY[2][npanels]; // = { 2,10 };
 byte panHomeDir_XY[2][npanels]; // = { 0,0 };
 byte panHomeDis_XY[2][npanels]; // = { 0,0 };
-//byte panWPDir_XY[2][npanels]; // = { 27,12 };
+byte panWPDir_XY[2][npanels]; // = { 27,12 };
 byte panWPDis_XY[2][npanels]; // = { 23,11 };
 byte panTime_XY[2][npanels];
 

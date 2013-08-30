@@ -96,11 +96,11 @@ void read_mavlink(){
 				osd_climb = msg.climb_msg.climb / 10;
 				//Serial.println("=====");
 				break;
-                        case reset_msg:
-                                //Reset_AVR();
-                                delay(500);
-                                resetFunc();  //call reset
-                                break;
+            case reset_msg:
+				//Reset_AVR(); // we cannot use WDT because of possible issues with bootloader
+                delay(500);
+                resetFunc();  //call reset
+                break;
 			default:
 				//Do nothing
 				break;

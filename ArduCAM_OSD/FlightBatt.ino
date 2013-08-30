@@ -38,8 +38,8 @@ static float voltage_b = LOW_VOLTAGE * 1.05;	// battery voltage, initialized abo
 void flight_batt_init(void)
 {
 	analogReference(INTERNAL);			// INTERNAL: a built-in reference, equal to 1.1 volts on the ATmega168 or ATmega328
-        voltage_a = battv_A * 1.1;
-        voltage_b = battv_B * 1.1; 
+    voltage_a = battv_A * 1.1;
+    voltage_b = battv_B * 1.1; 
 }
 
 void flight_batt_read(void)
@@ -51,7 +51,7 @@ void flight_batt_read(void)
 
 	if (loopTimer + MEASURE_PERIOD <= millis()) {
 		delta_ms	= millis() - loopTimer;
-		loopTimer      	= millis();
+		loopTimer  	= millis();
 		
 		voltage_a	= CURRENT_VOLTAGE(analogRead(VOLTAGE_A_PIN), voltage_calibration_A) * 0.2 + voltage_a * 0.8;		// reads battery voltage pin
 		//voltage_a	= analogRead(VOLTAGE_A_PIN);
@@ -60,8 +60,8 @@ void flight_batt_read(void)
 		//voltage_b       = analogRead(VOLTAGE_B_PIN);
 		osd_vbat_B	= voltage_b;
 
-                //temperature     = CURRENT_TEMPERATURE(analogRead(TEMPERATURE_PIN), tempconv, tempconvAdd);
-                temperature     = analogRead(TEMPERATURE_PIN);
+        //temperature     = CURRENT_TEMPERATURE(analogRead(TEMPERATURE_PIN), tempconv, tempconvAdd);
+        temperature     = analogRead(TEMPERATURE_PIN);
                 
 		if (current_calibration_A > 0.0) {								// Consider Amp sensor disbled when Amp per Volt ratio is zero
 			current_amps	= CURRENT_AMPS(analogRead(CURRENT_PIN), current_calibration_A) * 0.1 + current_amps * 0.9; 	// reads battery sensor current pin
@@ -70,6 +70,5 @@ void flight_batt_read(void)
 			osd_curr_A	= current_amps * 100;
 			//mah_used	= current_total;
 		}
-		
 	}
 }
