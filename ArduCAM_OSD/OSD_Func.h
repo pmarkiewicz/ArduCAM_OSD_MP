@@ -19,28 +19,6 @@ void setHeadingPatern()
 	buf_show[7] = '\0';
 }
 
-//------------------ Battery Remaining Picture ----------------------------------
-/*
-char setBatteryPic(uint16_t bat_level)
-{
-	if(bat_level <= 100){
-		return 0xb4;
-	}
-	else if(bat_level <= 300){
-		return 0xb5;
-	}
-	else if(bat_level <= 400){
-		return 0xb6;
-	}
-	else if(bat_level <= 500){
-		return 0xb7;
-	}
-	else if(bat_level <= 800){
-		return 0xb8;
-	}
-	else return 0xb9;
-}
-*/
 //------------------ Home Distance and Direction Calculation ----------------------------------
 
 void setHomeVars(OSD &osd)
@@ -52,10 +30,10 @@ void setHomeVars(OSD &osd)
 //    takeoff_heading = osd_heading;
 	osd_alt_to_home = (osd_alt - osd_home_alt);
 
-        if(osd_got_home == 0 && osd_fix_type == 3) {
+    if(osd_got_home == 0 && osd_fix_type == 3) {
 		osd_home_lat = osd_lat;
 		osd_home_lon = osd_lon;
-		//osd_home_alt = osd_alt;
+		osd_home_alt = osd_alt;
 		osd_got_home = 1;
 	}
 	else if(osd_got_home == 1){
@@ -101,15 +79,17 @@ void setHomeVars(OSD &osd)
 
 void setFdataVars(){
 
-	if (haltset == 1 && takeofftime == 0 && osd_alt_to_home > 5 && osd_throttle > 10){
+	if (haltset == 1 && takeofftime == 0 && osd_alt_to_home > 5 && osd_throttle > 10){	// we started, haltset is 1 after stable alt is read and we are 5m above ground
 		takeofftime = 1;
 		tdistance = 0;
-		FTime = (millis()/1000);
+		landed = 0;
+		FTime = (millis()/1000);	// used to calculate flight time
 	}
 
-        if (osd_alt_to_home <= 20 && osd_groundspeed <= 2 && osd_throttle <= 10 && takeofftime == 1 && osd_home_distance <= 100) {
-                landed = millis();
-        }
+    if (osd_alt_to_home <= 20 && osd_groundspeed <= 2 && osd_throttle <= 10 && takeofftime == 1 && osd_home_distance <= 100) {	// landed close to start
+		takeofftime = 0;
+        landed = millis();
+    }
         
 	if (osd_groundspeed > 1.0) tdistance += (osd_groundspeed * (millis() - runt) / 1000.0);
 	mah_used += (osd_curr_A * 10.0 * (millis() - runt) / 3600000.0);
