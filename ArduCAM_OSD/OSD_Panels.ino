@@ -449,7 +449,7 @@ void panOff(){
     }
     
 	if (ch_toggle == 4) {		// flight mode -> distance mode
-		if (osd_fix_type == 3) {	// only if we have good coords
+		if (osd_got_home == 1) {	// only if we have good coords
 			static uint16_t distance = osd_home_distance / osd_alt;
 			if (distance > distance_auto_switch) {
 				new_panel = 0;
@@ -480,7 +480,7 @@ void panOff(){
 		else {
 			if (ch_raw > 1200) {
 				if (osd_switch_time + 1000 < millis()) {
-					osd_clear = 1;
+					//osd_clear = 1;
 					new_panel = panel + 1;
 					if (new_panel > npanels) {
 						new_panel = 0;
@@ -649,11 +649,12 @@ const char* warning_string[] = {
 			}
 		}
 
-                if (blinker)
-  		  osd.printf(warning_string[0]);
-                else
-  		  osd.printf(warning_string[warning_type]);
+        if (blinker)
+			osd.printf(warning_string[0]);
+        else
+			osd.printf(warning_string[warning_type]);
 	}
+	
 	osd.closePanel();
 }
 
