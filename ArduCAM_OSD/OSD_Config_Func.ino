@@ -62,12 +62,20 @@ void InitializeOSD() {
 
 // Write our latest FACTORY settings to EEPROM
 void writeSettings() {
+static int i;
+
 	// Writing all default parameters to EEPROM, ON = panel enabled  
 	// All panels have 3 values:
 	//  - Enable/Disable
 	//  - X coordinate on screen
 	//  - Y coordinate on screen
 	uint16_t offset = OffsetBITpanel * panel;
+	
+	// cleanup EEPROM first
+	for (i = panCenter_en_ADDR; i <= panDistance_y_ADDR; ++i) {
+		writeEEPROM(off, i + offset);
+	}
+	
 	//    writeEEPROM(off, panCenter_en_ADDR + offset);
 	//    writeEEPROM(13, panCenter_x_ADDR + offset);
 	//    writeEEPROM(7,  panCenter_y_ADDR + offset);
@@ -107,9 +115,9 @@ void writeSettings() {
 	writeEEPROM(on, panHomeDis_en_ADDR + offset);
 	writeEEPROM(22, panHomeDis_x_ADDR + offset);
 	writeEEPROM(1,  panHomeDis_y_ADDR + offset);
-	//writeEEPROM(off,panWPDir_en_ADDR);
-	//writeEEPROM(27,  panWPDir_x_ADDR);
-	//writeEEPROM(12,  panWPDir_y_ADDR);
+	writeEEPROM(off,panWPDir_en_ADDR);
+	writeEEPROM(27,  panWPDir_x_ADDR);
+	writeEEPROM(12,  panWPDir_y_ADDR);
 	writeEEPROM(off,panWPDis_en_ADDR);
 	writeEEPROM(9,  panWPDis_x_ADDR);
 	writeEEPROM(14, panWPDis_y_ADDR);
@@ -194,8 +202,8 @@ void writeSettings() {
 	writeEEPROM(1,current_calibration_div_A_ADDR);
 	writeEEPROM(0,current_offset_A_ADDR);
 
-        writeEEPROM(1, temperature_calibration_ADDR);
-        writeEEPROM(0, temperature_offset_ADDR);
+    writeEEPROM(1, temperature_calibration_ADDR);
+    writeEEPROM(0, temperature_offset_ADDR);
 
 }
 void readSettings() {
