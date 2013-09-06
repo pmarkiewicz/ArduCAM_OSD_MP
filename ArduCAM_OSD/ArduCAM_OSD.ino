@@ -179,15 +179,6 @@ void setup()
 // As simple as possible.
 void loop() 
 {
-
-	if(enable_mav_request == 1){//Request rate control
-		enable_mav_request = 0;
-		//delay(2000);
-		osd.clear();
-		waitingMAVBeats = 0;
-		lastMAVBeat = millis();//Preventing error from delay sensing
-	}
-
 	read_mavlink();
 	
 	mavlinkTimer.Run();

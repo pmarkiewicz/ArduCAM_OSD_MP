@@ -289,7 +289,7 @@ void panCh(int first_col, int first_line){
 /* **************************************************************** */
 // Panel  : panRSSI
 // Needs  : X, Y locations
-// Output : Alt symbol and altitude value in meters from MAVLink
+// Output : RSSI symbol and rssi value from MAVLink
 // Size   : 1 x 7Hea  (rows x chars)
 // Staus  : done
 
@@ -300,10 +300,14 @@ void panRSSI(int first_col, int first_line){
 	//if (rssi > rssical) rssi = rssical;
 	//else if (rssi < rssipersent) rssi = rssipersent;
 
-	if(!rssiraw_on) rssi = (int16_t)((float)(rssi - rssipersent)/(float)(rssical-rssipersent)*100.0f);
-	//    if (rssi < -99) rssi = -99;
-	osd.printf("%c%3i%c", 0x09, rssi, 0x25);
-	//    osd.printf("%c%3i%c", 0x09, osd_clear, 0x25); 
+	if(!rssiraw_on) {
+		rssi = (int16_t)((float)(rssi - rssipersent)/(float)(rssical-rssipersent)*100.0f);
+		osd.printf("%c%3i%c", 0x09, rssi, 0x25);
+	}
+	else {
+		osd.printf("%c%3i", 0x09, rssi); 
+	}
+	
 	osd.closePanel();
 }
 
@@ -644,7 +648,7 @@ const char* warning_string[] = {
 				else if(x == 4) {if (battv_A > 1.0 && osd_vbat_A < battv_A) warning_type = 4;}
 				else if(x == 5) {if (rssi < rssi_warn_level && rssi != -99 && !rssiraw_on) warning_type = 5;}
 				else if(x == 6) {if (battv_B > 1.0 && osd_vbat_B < battv_B) warning_type = 6;}
-  	                        else if(x == 7) {if(millis() < (lastMAVBeat + 2200)) warning_type = 7; }
+  	            else if(x == 7) {if(millis() > (lastMAVBeat + 3000)) warning_type = 7; }
 
 				if (x == last_warning) break; // if we've done a full cycle then there mustn't be any warnings
 			}
