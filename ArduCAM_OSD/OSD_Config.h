@@ -67,7 +67,7 @@
 #define OffsetBITpanel       250
 
 // First of 8 panels
-//#define panCenter_en_ADDR 0
+#define panCenter_en_ADDR 0
 //#define panCenter_x_ADDR 2
 //#define panCenter_y_ADDR 4
 #define panPitch_en_ADDR 6
