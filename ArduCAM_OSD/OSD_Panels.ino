@@ -980,7 +980,7 @@ void panRose(int first_col, int first_line){
 // Staus  : not ready TODO - CHANGE the Waypoint symbol - Now only a W!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 void panWPDis(int first_col, int first_line){
-static uint_8 mode_ch;
+static uint8_t mode_ch;
 
 	osd.setPanel(first_col, first_line);
 	osd.openPanel();
