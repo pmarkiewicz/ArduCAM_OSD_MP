@@ -93,7 +93,7 @@ static void parse_mission_msg(simple_message_t* msg)
 {
     msg->msgid = mission_msg;
     
-    msg->mission_msg.wp_target_bearing = atol(first());
+    msg->mission_msg.wp_target_bearing = atoi(first());
     msg->mission_msg.wp_dist = atol(next());
     msg->mission_msg.wp_number = atoi(next());
 }

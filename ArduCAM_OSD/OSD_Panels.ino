@@ -84,10 +84,8 @@ void writePanels(){
 				if(ISb(panel,Time_BIT)) panTime(panTime_XY[0][panel], panTime_XY[1][panel]);
 				// if(ISb(panel,WDir_BIT)) panWPDir(panWPDir_XY[0][panel], panWPDir_XY[1][panel]); //??x??
 				
-                if(wp_number > 0){
-				    if(ISb(panel,WDis_BIT)) panWPDis(panWPDis_XY[0][panel], panWPDis_XY[1][panel]); //??x??
-                }
-				
+ 			    if(ISb(panel,WDis_BIT)) panWPDis(panWPDis_XY[0][panel], panWPDis_XY[1][panel]); //??x??
+ 				
 				//Testing bits from 8 bit register C 
 				if(osd_got_home == 1){
 					if(ISc(panel,Alt_BIT)) panAlt(panAlt_XY[0][panel], panAlt_XY[1][panel]); //
@@ -982,22 +980,22 @@ void panRose(int first_col, int first_line){
 // Staus  : not ready TODO - CHANGE the Waypoint symbol - Now only a W!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 void panWPDis(int first_col, int first_line){
+static uint_8 mode_ch;
+
 	osd.setPanel(first_col, first_line);
 	osd.openPanel();
 	
-	wp_target_bearing_rotate_int = round(((float)wp_target_bearing - osd_heading)/360.0 * 16.0) + 1; //Convert to int 0-16 
-	if(wp_target_bearing_rotate_int < 0 ) wp_target_bearing_rotate_int += 16; //normalize
-    else if(wp_target_bearing_rotate_int > 16 ) wp_target_bearing_rotate_int -= 16; //normalize
-	if (xtrack_error > 999) xtrack_error = 999;
-	else if (xtrack_error < -999) xtrack_error = -999;
-
-	osd.printf("%c%c%2i%c%4.0f%c|",0x57, 0x70, wp_number,0x0,(double)((float)(wp_dist) * converth),high);
-	showArrow((uint8_t)wp_target_bearing_rotate_int,0);
-	
-      if (osd_mode == 5 || osd_mode == 10 || osd_mode == 11 || osd_mode == 15){     
-		osd.printf("%c%c%c%4.0f%c", 0x20, 0x58, 0x65, (xtrack_error* converth), high);
+    if (osd_mode == 5 || osd_mode == 11 || osd_mode == 15){     
+		mode_ch = 0xB6;
+		if (osd_mode == 5) {
+			mode_ch = 0xB7;
+		}
+		
+		osd.printf("%c %2i %4.0f%c", mode_ch, wp_number, ((float)(wp_dist) * converth), high);
+		// @ 11 32000m
+		
 	}else{
-		osd.printf_P(PSTR("\x20\x20\x20\x20\x20\x20\x20\x20"));
+		osd.printf_P(PSTR("           "));
 	}
 	osd.closePanel();
 }
