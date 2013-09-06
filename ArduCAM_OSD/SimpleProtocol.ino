@@ -93,7 +93,7 @@ void read_mavlink(){
                                 //temperature = msg.power_msg.vbat_A * 10;
 				break;
 			case climb_msg:
-				osd_climb = msg.climb_msg.climb / 10;
+				osd_climb = msg.climb_msg.climb;
 				//Serial.println("=====");
 				break;
             case reset_msg:

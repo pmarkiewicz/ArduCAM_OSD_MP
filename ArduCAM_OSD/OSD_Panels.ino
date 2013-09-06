@@ -553,8 +553,9 @@ void panAlt(int first_col, int first_line){
 void panClimb(int first_col, int first_line){
 	osd.setPanel(first_col, first_line);
 	osd.openPanel();
-	vs = (osd_climb * converth) * 0.1 + vs * 0.90;
-	osd.printf("%c%4.0f%c",0x15, int(vs / 10.0) * 10.0, climbchar);
+	//vs = (osd_climb * converth) * 0.1 + vs * 0.90;
+	//osd.printf("%c%4.0f%c",0x15, int(vs / 10.0) * 10.0, climbchar);
+	osd.printf("%c%4.0f%c",0x15, osd_climb, climbchar);
 	osd.closePanel();
 }
 
