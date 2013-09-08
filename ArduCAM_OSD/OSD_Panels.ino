@@ -1029,8 +1029,8 @@ void panFlightMode(int first_col, int first_line){
 	if (osd_mode == 0) mode_str = "manu"; //Manual
 	if (osd_mode == 2) mode_str = "stab"; //Stabilize
 	if (osd_mode == 5) mode_str = "wayp"; //FLY_BY_WIRE_A
-	if (osd_mode == 10) mode_str = "auto"; //AUTO
-	if (osd_mode == 11) mode_str = "rth"; //Return to Launch 
+	if (osd_mode == 10) mode_str = "auto"; // this is unknown mode in MP (error)
+	if (osd_mode == 11) mode_str = "rth "; //Return to Launch 
 	if (osd_mode == 15) mode_str = "rthh"; //GUIDED
 	osd.printf("%c%s", 0x7f, mode_str);
 	//      osd.printf("%c%i", 0x7f, osd_mode);
