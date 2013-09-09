@@ -12,7 +12,7 @@ void startPanels(){
 void panLogo(){
 	osd.setPanel(5, 5);
 	osd.openPanel();
-	osd.printf_P(PSTR("\xb0\xb1\xb2\xb3\xb4|\xb5\xb6\xb7\xb8\xb9|MinimOSD-Extra 2.4 | r622 MP|"));
+	osd.printf_P(PSTR("\xb0\xb1\xb2\xb3\xb4|\xb5\xb6\xb7\xb8\xb9|MinimOSD-Extra 2.4 | r623 MP|"));
 	//osd.printf_P(PSTR("Waiting for communication"));
 	osd.closePanel();
 }
@@ -300,7 +300,7 @@ void panRSSI(int first_col, int first_line){
 
 	if(!rssiraw_on) {
 		rssi = (int16_t)((float)(rssi - rssipersent)/(float)(rssical-rssipersent)*100.0f);
-		osd.printf("%c%3i%c", 0x09, rssi, 0x25);
+		osd.printf("%c%3i%%", 0x09, rssi);
 	}
 	else {
 		osd.printf("%c%3i", 0x09, rssi); 
@@ -866,8 +866,6 @@ void panGPSats(int first_col, int first_line){
     if (blinker && osd_fix_type != 3)
        gps_str = 0x20;
 
-    gps_str = 0x30 + osd_fix_type;
-    	
     osd.printf("%c%2i", gps_str, osd_satellites_visible);
     osd.closePanel();
 }
