@@ -452,7 +452,7 @@ void panOff(){
     
 	if (ch_toggle == 4) {		// flight mode -> distance mode
 		if (osd_got_home == 1) {	// only if we have good coords
-			static uint16_t distance = osd_home_distance / osd_alt;
+			static long distance = osd_home_distance / osd_alt;	
 			if (distance > distance_auto_switch) {
 				new_panel = 0;
 			}

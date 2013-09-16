@@ -145,11 +145,11 @@ static char         char_call[OSD_CALL_SIGN_TOTAL+1] = {0};
 //MAVLink session control
 static boolean      mavbeat = 0;
 static float        lastMAVBeat = 0;
-static boolean      waitingMAVBeats = 1;
+//static boolean      waitingMAVBeats = 1;
 //static uint8_t      apm_mav_type;
 static uint8_t      apm_mav_system; 
-static uint8_t      apm_mav_component;
-static boolean      enable_mav_request = 0;
+//static uint8_t      apm_mav_component;
+//static boolean      enable_mav_request = 0;
 static boolean      blinker = 0;
 static boolean      one_sec_timer_switch = 0;
 
@@ -229,4 +229,4 @@ static float current_calibration_A = 1.0;
 static float current_offset_A = 0.0;
 
 // auto distance switch
-uint16_t distance_auto_switch = 20;
+uint16_t distance_auto_switch = 10;

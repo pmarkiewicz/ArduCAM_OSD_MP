@@ -4,7 +4,7 @@
 
 // Version number, incrementing this will erase/upload factory settings.
 // Only devs should increment this
-#define VER 78
+#define VER 79
 
 // EEPROM Stepping, be careful not to overstep. 
 // We reserved floats for just to be sure if some values needs to be
@@ -218,6 +218,8 @@
 
 #define temperature_calibration_ADDR 942
 #define temperature_offset_ADDR 944
+
+#define distance_auto_switch_ADDR 946
 
 #define CHK1 1000
 #define CHK2 1006

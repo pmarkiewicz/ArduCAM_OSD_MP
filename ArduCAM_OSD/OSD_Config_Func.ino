@@ -204,6 +204,7 @@ static int i;
 
     writeEEPROM(1, temperature_calibration_ADDR);
     writeEEPROM(0, temperature_offset_ADDR);
+	writeEEPROM(10, distance_auto_switch_ADDR);
 
 }
 void readSettings() {
@@ -230,8 +231,10 @@ void readSettings() {
 	current_calibration_A = readEEPROM_u16(current_calibration_mult_A_ADDR) / 10.0 + (EEPROM.read(current_calibration_div_A_ADDR) / 100);
 	current_offset_A = readEEPROM_u16(current_offset_A_ADDR) / 10.0;
 
-        tempconv = EEPROM.read(temperature_calibration_ADDR);
-        tempconvAdd = EEPROM.read(temperature_offset_ADDR);
+    tempconv = EEPROM.read(temperature_calibration_ADDR);
+    tempconvAdd = EEPROM.read(temperature_offset_ADDR);
+	
+	distance_auto_switch = EEPROM.read(temperature_offset_ADDR);
         
 	int i;
 	for(i=0;i < OSD_CALL_SIGN_TOTAL;i++) 
