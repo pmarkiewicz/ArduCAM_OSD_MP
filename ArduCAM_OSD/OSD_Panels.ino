@@ -439,29 +439,29 @@ void panWindSpeed(int first_col, int first_line){
 // Status  : done
 
 void panOff(){
-	static byte new_panel;
+    static byte new_panel;
+    static unsigned long last_switch_millis = 0;
 	
-    if (warning == 1) {
-        if (panel != panel_auto_switch) {
-          osd_clear = 1;
-          panel = panel_auto_switch;
-        }
-        
-        return;  // no switch possible
-    }
+    new_panel = panel;
     
-	if (ch_toggle == 4) {		// flight mode -> distance mode
-		if (osd_got_home == 1) {	// only if we have good coords
-			static long distance = osd_home_distance / osd_alt;	
-			if (distance > distance_auto_switch) {
-				new_panel = 0;
-			}
-			else {
-				new_panel = 1;
-			}
-		}
+    if (warning == 1) {
+          new_panel = panel_auto_switch;  //only change to auto panel
+    }
+    else if (ch_toggle == 4) {		// flight mode -> distance mode
+	if (osd_got_home == 1) {	// only if we have good coords
+	  static long distance = osd_home_distance / osd_alt;	
+          
+          if (millis() >  last_switch_millis + 500) {   // switch no faster that 500ms to avoid blinking on edge
+	      if (distance > distance_auto_switch) {
+		new_panel = 0;
+	      }
+	      else {
+	        new_panel = 1;
+	      }
+	  }
 	}
-	else {						// switch mode
+    }
+    else {						// switch mode
 		if(ch_toggle == 5) ch_raw = chan5_raw;
 		else if(ch_toggle == 6) ch_raw = chan6_raw;
 		else if(ch_toggle == 7) ch_raw = chan7_raw;
@@ -497,6 +497,7 @@ void panOff(){
 	if (panel != new_panel) {	// something to switch to
 		osd_clear = 1;
 		panel = new_panel;
+                last_switch_millis = millis();
 	}
 }
 
