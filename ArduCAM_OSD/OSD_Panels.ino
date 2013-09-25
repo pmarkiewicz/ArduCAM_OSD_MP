@@ -12,7 +12,7 @@ void startPanels(){
 void panLogo(){
 	osd.setPanel(5, 5);
 	osd.openPanel();
-	osd.printf_P(PSTR("\xb0\xb1\xb2\xb3\xb4|\xb5\xb6\xb7\xb8\xb9|MinimOSD-Extra 2.4 | r623 MP|"));
+	osd.printf_P(PSTR("\xb0\xb1\xb2\xb3\xb4|\xb5\xb6\xb7\xb8\xb9|MinimOSD-Extra 2.4 | r624 MP|"));
 	//osd.printf_P(PSTR("Waiting for communication"));
 	osd.closePanel();
 }
@@ -21,6 +21,7 @@ void panLogo(){
 /******* PANELS - POSITION *******/
 
 void writePanels(){ 
+static uint8_t panel_err = 0;
 
 		if (takeofftime == 0 && landed > 0 && (millis() - landed) > 5000) {   // 5 secs after landed
 			if (osd_clear == 0) {
@@ -32,6 +33,11 @@ void writePanels(){
             return;
 		} 
 
+		if (panel > npanels) {	// sanity check
+			panel_err = panel;
+			panel = panel_auto_switch;
+			osd_clear = 1;
+		}
         
 		if(ISd(panel,Warn_BIT)) {
 			panWarn(panWarn_XY[0][panel], panWarn_XY[1][panel]); // this must be here so warnings are always checked
@@ -121,8 +127,12 @@ void writePanels(){
 	osd.printf("%i",freeMem()); 
 	osd.closePanel();
 #endif
-
-
+	if (panel_err) {
+		osd.setPanel(13,5);
+		osd.openPanel();
+		osd.printf("P%i", panel_err); 
+		osd.closePanel();
+	}
 }
 /******* PANELS - DEFINITION *******/
 /*
@@ -287,7 +297,7 @@ void panCh(int first_col, int first_line){
 /* **************************************************************** */
 // Panel  : panRSSI
 // Needs  : X, Y locations
-// Output : RSSI symbol and rssi value from MAVLink
+// Output : RSSI symbol and rssi value from MP
 // Size   : 1 x 7Hea  (rows x chars)
 // Staus  : done
 
@@ -297,9 +307,14 @@ void panRSSI(int first_col, int first_line){
 	rssi = (int16_t)osd_rssi;
 	//if (rssi > rssical) rssi = rssical;
 	//else if (rssi < rssipersent) rssi = rssipersent;
-
+	
 	if(!rssiraw_on) {
-		rssi = (int16_t)((float)(rssi - rssipersent)/(float)(rssical-rssipersent)*100.0f);
+		// check range
+		if (rssi < rssi_min)	rssi = rssi_min;
+		if (rssi > rssi_max)	rssi = rssi_max;
+		
+		rssi -= rssi_min;	// rssi is now in rssi_range
+		rssi = (uint16_t)((float)rssi / rssi_scale);
 		osd.printf("%c%3i%%", 0x09, rssi);
 	}
 	else {
