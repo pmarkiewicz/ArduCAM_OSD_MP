@@ -632,7 +632,7 @@ void panAirSpeed(int first_col, int first_line){
 // Staus  : done
 
 void panWarn(int first_col, int first_line){
-const char* warning_string[] = {
+static const char* warning_string[] = {
   "              ",    // clear
   "  no GPS fix  ",    // 
   "     Stall    ",    // 
@@ -643,15 +643,19 @@ const char* warning_string[] = {
   "No communicat."  
 };
 
+static long next_warn_check = 0;
+
 	osd.setPanel(first_col, first_line);
 	osd.openPanel();
 
-	if (blinker) {	// every 2 seconds
-		uint8_t x = warning_type + 1;		// start with next we have to rotate all warns
+	if (millis() > next_warn_check) {	// every 2 seconds
+		uint8_t x = warning_type;		// start with next we have to rotate all warns
 		
 		warning = 0;						// if we are lucky
 		
-		while (x != warning_type) {			// full cycle done
+		do {			// full cycle done
+			++x;
+			
 			switch (x) {
 			case 0:		break;			// skip
 			case 1:		if (osd_fix_type < 2) warning = 1;
@@ -676,14 +680,19 @@ const char* warning_string[] = {
 				break;
 			}
 			
-			++x;
+		} while (x != warning_type);
+		
+		if (warning == 0) {	// no warning
+			warning_type = 0;		// cancel
 		}
+		
+		next_warn_check = millis() + 2000;
 	}
-	
+
 	if (blinker)
-		osd.printf(warning_string[0]);
-	else
 		osd.printf(warning_string[warning_type]);
+	else
+		osd.printf(warning_string[0]);	// let's blink
 	
 	osd.closePanel();
 }
