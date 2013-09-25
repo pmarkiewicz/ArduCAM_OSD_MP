@@ -12,7 +12,7 @@ void startPanels(){
 void panLogo(){
 	osd.setPanel(5, 5);
 	osd.openPanel();
-	osd.printf_P(PSTR("\xb0\xb1\xb2\xb3\xb4|\xb5\xb6\xb7\xb8\xb9|MinimOSD-Extra 2.4 | r623 MP|"));
+	osd.printf_P(PSTR("MatrixPilot|MinimOSD-Extra 2.4 | r624|"));
 	//osd.printf_P(PSTR("Waiting for communication"));
 	osd.closePanel();
 }
