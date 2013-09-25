@@ -653,7 +653,7 @@ static long next_warn_check = 0;
 		
 		warning = 0;						// if we are lucky
 		
-		do {			// full cycle done
+		do {			
 			++x;
 			
 			switch (x) {
@@ -680,7 +680,7 @@ static long next_warn_check = 0;
 				break;
 			}
 			
-		} while (x != warning_type);
+		} while (x != warning_type);    // full cycle done
 		
 		if (warning == 0) {	// no warning
 			warning_type = 0;		// cancel
