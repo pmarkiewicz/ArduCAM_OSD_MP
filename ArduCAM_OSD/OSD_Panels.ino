@@ -304,17 +304,13 @@ void panCh(int first_col, int first_line){
 void panRSSI(int first_col, int first_line){
 	osd.setPanel(first_col, first_line);
 	osd.openPanel();
+
 	rssi = (int16_t)osd_rssi;
-	//if (rssi > rssical) rssi = rssical;
-	//else if (rssi < rssipersent) rssi = rssipersent;
+	if (rssi > rssical) rssi = rssical;
+	else if (rssi < rssipersent) rssi = rssipersent;
 	
 	if(!rssiraw_on) {
-		// check range
-		if (rssi < rssi_min)	rssi = rssi_min;
-		if (rssi > rssi_max)	rssi = rssi_max;
-		
-		rssi -= rssi_min;	// rssi is now in rssi_range
-		rssi = (uint16_t)((float)rssi / rssi_scale);
+		rssi = (int16_t)((float)(rssi - rssipersent)/(float)(rssical-rssipersent)*100.0f);
 		osd.printf("%c%3i%%", 0x09, rssi);
 	}
 	else {
@@ -686,7 +682,7 @@ static long next_warn_check = 0;
 			warning_type = 0;		// cancel
 		}
 		
-		next_warn_check = millis() + 2000;
+		next_warn_check = millis() + 5000;
 	}
 
 	if (blinker)
