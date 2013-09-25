@@ -220,14 +220,14 @@ void readSettings() {
 	//	}
 	ch_toggle = EEPROM.read(ch_toggle_ADDR);
 	//  battp = EEPROM.read(battp_ADDR);
-	rssical = EEPROM.read(OSD_RSSI_HIGH_ADDR);
+	//rssical = EEPROM.read(OSD_RSSI_HIGH_ADDR);
 	//rssipersent = EEPROM.read(OSD_RSSI_LOW_ADDR);
 	rssiraw_on = EEPROM.read(OSD_RSSI_RAW_ADDR);
 
 	rssi_min = EEPROM.read(RSSI_MIN_ADDR);
 	rssi_max = EEPROM.read(RSSI_MAX_ADDR);
-	rssi_range = rssi_max - rssi_min;
-	rssi_scale = rssi_range / 100.0f;
+	//rssi_range = rssi_max - rssi_min;
+	rssi_scale = (float)(rssi_max - rssi_min) / 100.0f;
 
 	/*batt_A_warn_level = EEPROM.read(OSD_BATT_A_WARN_ADDR);
 	batt_B_warn_level = EEPROM.read(OSD_BATT_B_WARN_ADDR);*/
