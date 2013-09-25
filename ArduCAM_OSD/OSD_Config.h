@@ -4,7 +4,7 @@
 
 // Version number, incrementing this will erase/upload factory settings.
 // Only devs should increment this
-#define VER 79
+#define VER 80
 
 // EEPROM Stepping, be careful not to overstep. 
 // We reserved floats for just to be sure if some values needs to be
@@ -220,6 +220,9 @@
 #define temperature_offset_ADDR 944
 
 #define distance_auto_switch_ADDR 946
+
+#define RSSI_MIN_ADDR 948
+#define RSSI_MAX_ADDR 950
 
 #define CHK1 1000
 #define CHK2 1006
