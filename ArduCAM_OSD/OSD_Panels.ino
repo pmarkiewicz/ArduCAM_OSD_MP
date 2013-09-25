@@ -482,6 +482,10 @@ void panOff(){
 		else if(ch_toggle == 7) ch_raw = chan7_raw;
 		else if(ch_toggle == 8) ch_raw = chan8_raw;
 
+		if (ch_raw < 800 || ch_raw > 2200) {
+			ch_raw = 1000;
+		}
+		
 		if (switch_mode == 0){
 			if (ch_raw < 1200) {
 				new_panel = 0;
