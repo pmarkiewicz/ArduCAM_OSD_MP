@@ -79,7 +79,7 @@ static float        start_Time = -1.0;
 static uint8_t      osd_mode = 0;                   // Navigation mode from RC AC2 = CH5, APM = CH8
 static uint8_t      osd_nav_mode = 0;               // Navigation mode from RC AC2 = CH5, APM = CH8
 static unsigned long one_sec_timer = 0;
-static unsigned long text_timer = 0;
+//static unsigned long text_timer = 0;
 static unsigned long warning_timer =0;
 static unsigned long runt =0;
 static unsigned long FTime = 0;

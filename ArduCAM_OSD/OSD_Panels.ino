@@ -639,44 +639,51 @@ const char* warning_string[] = {
   "  Overspeed   ",    // overspeed
   "Battery A Low ",    // batt A
   "   Low RSSI   ",    // RSSI
-  "Battery B Low ",     // batt B
+  "Battery B Low ",    // batt B
   "No communicat."  
 };
 
 	osd.setPanel(first_col, first_line);
 	osd.openPanel();
 
-	if (millis() > text_timer){ // if the text has been shown for a while
-		if (warning_type != 0) {
-			last_warning = warning_type; // save the warning type for cycling
-			warning_type = 0; // blank the text
-			warning = 1;
-			warning_timer = millis();            
-		} else {
-			if ((millis() - 10000) > warning_timer ) warning = 0;
-
-			int x = last_warning; // start the warning checks where we left it last time
-			while (warning_type == 0) { // cycle through the warning checks
-				x++;
-				if (x > 7) x = 1; // change the 7 if you add more warning types
-
-				if(x == 1) {if (osd_fix_type < 2) warning_type = 1;} // No GPS Fix
-				else if(takeofftime == 1 && x == 2) {if (osd_airspeed * converts < stall && osd_airspeed > 1.12) warning_type = 2;}
-				else if(takeofftime == 1 && x == 3) {if ((osd_airspeed * converts) > (float)overspeed) warning_type = 3;}
-				else if(x == 4) {if (battv_A > 1.0 && osd_vbat_A < battv_A) warning_type = 4;}
-				else if(x == 5) {if (rssi < rssi_warn_level && rssi != -99 && !rssiraw_on) warning_type = 5;}
-				else if(x == 6) {if (battv_B > 1.0 && osd_vbat_B < battv_B) warning_type = 6;}
-  	            else if(x == 7) {if(millis() > (lastMAVBeat + 3000)) warning_type = 7; }
-
-				if (x == last_warning) break; // if we've done a full cycle then there mustn't be any warnings
+	if (blinker) {	// every 2 seconds
+		uint8_t x = warning_type + 1;		// start with next we have to rotate all warns
+		
+		warning = 0;						// if we are lucky
+		
+		while (x != warning_type) {			// full cycle done
+			switch (x) {
+			case 0:		break;			// skip
+			case 1:		if (osd_fix_type < 2) warning = 1;
+						break;
+			case 2:		if(takeofftime == 1 && (osd_airspeed * converts) < (float)stall) warning = 1;
+						break;
+			case 3:		if(takeofftime == 1 && (osd_airspeed * converts) > (float)overspeed) warning = 1;
+						break;
+			case 4:		if (battv_A > 1.0 && osd_vbat_A < battv_A) warning = 1;
+						break;
+			case 5:		if (rssi < rssi_warn_level && !rssiraw_on) warning = 1;
+						break;
+			case 6:		if (battv_B > 1.0 && osd_vbat_B < battv_B) warning = 1;
+						break;
+			case 7:		if (millis() > (lastMAVBeat + 3000)) warning = 1;
+						break;
+			default:	x = 0;			// last warning, start from first
 			}
+			
+			if (warning) {
+				warning_type = x;
+				break;
+			}
+			
+			++x;
 		}
-
-        if (blinker)
-			osd.printf(warning_string[0]);
-        else
-			osd.printf(warning_string[warning_type]);
 	}
+	
+	if (blinker)
+		osd.printf(warning_string[0]);
+	else
+		osd.printf(warning_string[warning_type]);
 	
 	osd.closePanel();
 }
