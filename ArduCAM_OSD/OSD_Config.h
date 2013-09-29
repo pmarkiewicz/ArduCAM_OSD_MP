@@ -221,8 +221,8 @@
 
 #define distance_auto_switch_ADDR 946
 
-#define RSSI_MIN_ADDR 948
-#define RSSI_MAX_ADDR 950
+//#define RSSI_MIN_ADDR 948
+//#define RSSI_MAX_ADDR 950
 
 #define CHK1 1000
 #define CHK2 1006

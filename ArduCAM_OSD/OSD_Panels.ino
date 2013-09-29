@@ -304,8 +304,8 @@ void panCh(int first_col, int first_line){
 void panRSSI(int first_col, int first_line){
 static char rssi_ch;
 
-	osd.setPanel(first_col, first_line);
-	osd.openPanel();
+    osd.setPanel(first_col, first_line);
+    osd.openPanel();
 
     rssi = (int16_t)osd_rssi;
 
@@ -316,9 +316,9 @@ static char rssi_ch;
 		
 		osd.printf("%c%3i%%", rssi_ch, rssi);
 	}
-
-    osd.printf("%c%3i%c", 0x09, rssi, 0x25);
-	
+    else {
+      osd.printf("%c%3i", 0x09, osd_rssi);
+    }
 	osd.closePanel();
 }
 
@@ -452,6 +452,7 @@ void panWindSpeed(int first_col, int first_line){
 // Status  : done
 
 void panOff(){
+  
     static byte new_panel;
     static unsigned long last_switch_millis = 0;
 	
@@ -516,6 +517,7 @@ void panOff(){
 		panel = new_panel;
                 last_switch_millis = millis();
 	}
+
 }
 
 //* **************************************************************** */
