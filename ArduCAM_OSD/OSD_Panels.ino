@@ -302,6 +302,8 @@ void panCh(int first_col, int first_line){
 // Staus  : done
 
 void panRSSI(int first_col, int first_line){
+static char rssi_ch;
+
 	osd.setPanel(first_col, first_line);
 	osd.openPanel();
 
@@ -309,6 +311,10 @@ void panRSSI(int first_col, int first_line){
 
     if(!rssiraw_on) {
 		rssi = (int16_t)((float)(rssi - rssipersent)/(float)(rssical-rssipersent)*100.0f);
+		rssi_ch = 0x09;
+		if (rssi < rssi_warn_level && blinker)  rssi_ch = ' ';
+		
+		osd.printf("%c%3i%%", rssi_ch, rssi);
 	}
 
     osd.printf("%c%3i%c", 0x09, rssi, 0x25);
@@ -816,6 +822,8 @@ void panRoll(int first_col, int first_line){
 // Staus  : done
 
 void panBatt_A(int first_col, int first_line){
+static char batt_ch;
+
 	osd.setPanel(first_col, first_line);
 	osd.openPanel();
 	/*************** This commented code is for the next ArduPlane Version
@@ -823,7 +831,12 @@ void panBatt_A(int first_col, int first_line){
 		osd.printf(" %c%5.2f%c", 0xbc, (double)osd_vbat_A, 0x0d);
 	else osd.printf("%c%5.2f%c%c", 0xbc, (double)osd_vbat_A, 0x0d, osd_battery_pic_A);
 	*/
-	osd.printf("%c%5.2f%c", 0xbc, (double)osd_vbat_A, 0x0d);
+
+	batt_ch = 0xbc;
+	if (battv_A > 1.0 && osd_vbat_A < battv_A && blinker)
+		batt_ch = ' ';
+		
+	osd.printf("%c%5.2f%c", batt_ch, (double)osd_vbat_A, 0x0d);
 	osd.closePanel();
 }
 
@@ -835,9 +848,17 @@ void panBatt_A(int first_col, int first_line){
 // Staus  : done
 
 void panBatt_B(int first_col, int first_line){
+static char batt_ch;
+
 	osd.setPanel(first_col, first_line);
 	osd.openPanel();
-	osd.printf("%c%5.2f%c", 0x60, (double)osd_vbat_B, 0x0d);
+
+	batt_ch = 0x60;
+	if (battv_B > 1.0 && osd_vbat_B < battv_B && blinker)
+		batt_ch = ' ';
+
+	osd.printf("%c%5.2f%c", batt_ch, (double)osd_vbat_B, 0x0d);
+	
 	osd.closePanel();
 }
 
