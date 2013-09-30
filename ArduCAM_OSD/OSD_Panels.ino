@@ -317,7 +317,7 @@ static char rssi_ch;
 		osd.printf("%c%3i%%", rssi_ch, rssi);
 	}
     else {
-      osd.printf("%c%3i", 0x09, osd_rssi);
+      osd.printf("%c%3i", 0x09, rssi);
     }
 	osd.closePanel();
 }

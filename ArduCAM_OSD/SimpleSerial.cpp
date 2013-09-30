@@ -50,14 +50,6 @@ static void parse_ap_msg(simple_message_t* msg)
     msg->ap_mode.mode = atoi(first());
 }
 
-static void parse_power_msg(simple_message_t* msg)
-{
-    //Serial.print("pp ");
-    msg->msgid = power_msg;
-    msg->power_msg.vbat_A = atoi(first());
-    //Serial.println("ppp");
-}
-
 static void parse_climb_msg(simple_message_t* msg)
 {
     //Serial.print("cc ");
@@ -112,11 +104,6 @@ static void parse_channels_msg(simple_message_t* msg)
     msg->channels_msg.rssi = atoi(next());
 }
 
-static void parse_reset(simple_message_t* msg)
-{
-    msg->msgid = reset_msg;
-}
-
 bool simple_parse(uint8_t c, simple_message_t* msg)
 {
     if (c != '$')
@@ -152,14 +139,8 @@ bool simple_parse(uint8_t c, simple_message_t* msg)
     case 'C':
         parse_channels_msg(msg);
         break;
-    case 'U':
-        parse_power_msg(msg);
-        break;
     case 'Z':
         parse_climb_msg(msg);
-        break;
-    case 'R':
-        parse_reset(msg);
         break;
     default:
         return false;
