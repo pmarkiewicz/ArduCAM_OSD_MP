@@ -153,7 +153,7 @@ static uint8_t      apm_mav_system;
 static boolean      blinker = 0;
 static boolean      one_sec_timer_switch = 0;
 
-static const uint8_t npanels = 2;
+static const uint8_t npanels PROGMEM = 2;
 static uint8_t panel = 0; 
 // Panel BIT registers
 byte panA_REG[npanels] = {0b00000000};
