@@ -206,8 +206,8 @@ static int i;
     writeEEPROM(0, temperature_offset_ADDR);
 	writeEEPROM(10, distance_auto_switch_ADDR);
 
-	//writeEEPROM(0, RSSI_MIN_ADDR);
-	//writeEEPROM(255, RSSI_MAX_ADDR);
+	writeEEPROM(0, RSSI_MIN_ADDR);
+	writeEEPROM(255, RSSI_MAX_ADDR);
 }
 void readSettings() {
 	overspeed = EEPROM.read(overspeed_ADDR);

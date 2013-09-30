@@ -12,7 +12,11 @@ void startPanels(){
 void panLogo(){
 	osd.setPanel(5, 5);
 	osd.openPanel();
+<<<<<<< HEAD
 	osd.printf_P(PSTR("MatrixPilot|MinimOSD-Extra 2.4 | r624|"));
+=======
+	osd.printf_P(PSTR("\xb0\xb1\xb2\xb3\xb4|\xb5\xb6\xb7\xb8\xb9|MinimOSD-Extra 2.4 | r623 MP|"));
+>>>>>>> parent of 5253307... Improved rssi calcculation
 	//osd.printf_P(PSTR("Waiting for communication"));
 	osd.closePanel();
 }
@@ -21,7 +25,6 @@ void panLogo(){
 /******* PANELS - POSITION *******/
 
 void writePanels(){ 
-static uint8_t panel_err = 0;
 
 		if (takeofftime == 0 && landed > 0 && (millis() - landed) > 5000) {   // 5 secs after landed
 			if (osd_clear == 0) {
@@ -33,11 +36,6 @@ static uint8_t panel_err = 0;
             return;
 		} 
 
-		if (panel > npanels) {	// sanity check
-			panel_err = panel;
-			panel = panel_auto_switch;
-			osd_clear = 1;
-		}
         
 		if(ISd(panel,Warn_BIT)) {
 			panWarn(panWarn_XY[0][panel], panWarn_XY[1][panel]); // this must be here so warnings are always checked
@@ -127,12 +125,8 @@ static uint8_t panel_err = 0;
 	osd.printf("%i",freeMem()); 
 	osd.closePanel();
 #endif
-	if (panel_err) {
-		osd.setPanel(13,5);
-		osd.openPanel();
-		osd.printf("P%i", panel_err); 
-		osd.closePanel();
-	}
+
+
 }
 /******* PANELS - DEFINITION *******/
 /*
@@ -297,28 +291,25 @@ void panCh(int first_col, int first_line){
 /* **************************************************************** */
 // Panel  : panRSSI
 // Needs  : X, Y locations
-// Output : RSSI symbol and rssi value from MP
+// Output : RSSI symbol and rssi value from MAVLink
 // Size   : 1 x 7Hea  (rows x chars)
 // Staus  : done
 
 void panRSSI(int first_col, int first_line){
-static char rssi_ch;
+	osd.setPanel(first_col, first_line);
+	osd.openPanel();
+	rssi = (int16_t)osd_rssi;
+	//if (rssi > rssical) rssi = rssical;
+	//else if (rssi < rssipersent) rssi = rssipersent;
 
-    osd.setPanel(first_col, first_line);
-    osd.openPanel();
-
-    rssi = (int16_t)osd_rssi;
-
-    if(!rssiraw_on) {
+	if(!rssiraw_on) {
 		rssi = (int16_t)((float)(rssi - rssipersent)/(float)(rssical-rssipersent)*100.0f);
-		rssi_ch = 0x09;
-		if (rssi < rssi_warn_level && blinker)  rssi_ch = ' ';
-		
-		osd.printf("%c%3i%%", rssi_ch, rssi);
+		osd.printf("%c%3i%%", 0x09, rssi);
 	}
-    else {
-      osd.printf("%c%3i", 0x09, osd_rssi);
-    }
+	else {
+		osd.printf("%c%3i", 0x09, rssi); 
+	}
+	
 	osd.closePanel();
 }
 
@@ -452,7 +443,6 @@ void panWindSpeed(int first_col, int first_line){
 // Status  : done
 
 void panOff(){
-  
     static byte new_panel;
     static unsigned long last_switch_millis = 0;
 	
@@ -481,10 +471,6 @@ void panOff(){
 		else if(ch_toggle == 7) ch_raw = chan7_raw;
 		else if(ch_toggle == 8) ch_raw = chan8_raw;
 
-		if (ch_raw < 800 || ch_raw > 2200) {
-			ch_raw = 1000;
-		}
-		
 		if (switch_mode == 0){
 			if (ch_raw < 1200) {
 				new_panel = 0;
@@ -517,7 +503,6 @@ void panOff(){
 		panel = new_panel;
                 last_switch_millis = millis();
 	}
-
 }
 
 //* **************************************************************** */
@@ -632,67 +617,51 @@ void panAirSpeed(int first_col, int first_line){
 // Staus  : done
 
 void panWarn(int first_col, int first_line){
-static const char* warning_string[] = {
+const char* warning_string[] = {
   "              ",    // clear
   "  no GPS fix  ",    // 
   "     Stall    ",    // 
   "  Overspeed   ",    // overspeed
   "Battery A Low ",    // batt A
   "   Low RSSI   ",    // RSSI
-  "Battery B Low ",    // batt B
+  "Battery B Low ",     // batt B
   "No communicat."  
 };
-
-static long next_warn_check = 0;
 
 	osd.setPanel(first_col, first_line);
 	osd.openPanel();
 
-	if (millis() > next_warn_check) {	// every 2 seconds
-		uint8_t x = warning_type;		// start with next we have to rotate all warns
-		
-		warning = 0;						// if we are lucky
-		
-		do {			
-			++x;
-			
-			switch (x) {
-			case 0:		break;			// skip
-			case 1:		if (osd_fix_type < 2) warning = 1;
-						break;
-			case 2:		if(takeofftime == 1 && (osd_airspeed * converts) < (float)stall) warning = 1;
-						break;
-			case 3:		if(takeofftime == 1 && (osd_airspeed * converts) > (float)overspeed) warning = 1;
-						break;
-			case 4:		if (battv_A > 1.0 && osd_vbat_A < battv_A) warning = 1;
-						break;
-			case 5:		if (rssi < rssi_warn_level && !rssiraw_on) warning = 1;
-						break;
-			case 6:		if (battv_B > 1.0 && osd_vbat_B < battv_B) warning = 1;
-						break;
-			case 7:		if (millis() > (lastMAVBeat + 3000)) warning = 1;
-						break;
-			default:	x = 0;			// last warning, start from first
-			}
-			
-			if (warning) {
-				warning_type = x;
-				break;
-			}
-			
-		} while (x != warning_type);    // full cycle done
-		
-		if (warning == 0) {	// no warning
-			warning_type = 0;		// cancel
-		}
-		
-		next_warn_check = millis() + 5000;
-	}
+	if (millis() > text_timer){ // if the text has been shown for a while
+		if (warning_type != 0) {
+			last_warning = warning_type; // save the warning type for cycling
+			warning_type = 0; // blank the text
+			warning = 1;
+			warning_timer = millis();            
+		} else {
+			if ((millis() - 10000) > warning_timer ) warning = 0;
 
-	if (blinker)
-		osd.printf(warning_string[warning_type]);
-	else
-		osd.printf(warning_string[0]);	// let's blink
+			int x = last_warning; // start the warning checks where we left it last time
+			while (warning_type == 0) { // cycle through the warning checks
+				x++;
+				if (x > 7) x = 1; // change the 7 if you add more warning types
+
+				if(x == 1) {if (osd_fix_type < 2) warning_type = 1;} // No GPS Fix
+				else if(takeofftime == 1 && x == 2) {if (osd_airspeed * converts < stall && osd_airspeed > 1.12) warning_type = 2;}
+				else if(takeofftime == 1 && x == 3) {if ((osd_airspeed * converts) > (float)overspeed) warning_type = 3;}
+				else if(x == 4) {if (battv_A > 1.0 && osd_vbat_A < battv_A) warning_type = 4;}
+				else if(x == 5) {if (rssi < rssi_warn_level && rssi != -99 && !rssiraw_on) warning_type = 5;}
+				else if(x == 6) {if (battv_B > 1.0 && osd_vbat_B < battv_B) warning_type = 6;}
+  	            else if(x == 7) {if(millis() > (lastMAVBeat + 3000)) warning_type = 7; }
+
+				if (x == last_warning) break; // if we've done a full cycle then there mustn't be any warnings
+			}
+		}
+
+        if (blinker)
+			osd.printf(warning_string[0]);
+        else
+			osd.printf(warning_string[warning_type]);
+	}
 	
 	osd.closePanel();
 }
@@ -824,8 +793,6 @@ void panRoll(int first_col, int first_line){
 // Staus  : done
 
 void panBatt_A(int first_col, int first_line){
-static char batt_ch;
-
 	osd.setPanel(first_col, first_line);
 	osd.openPanel();
 	/*************** This commented code is for the next ArduPlane Version
@@ -833,12 +800,7 @@ static char batt_ch;
 		osd.printf(" %c%5.2f%c", 0xbc, (double)osd_vbat_A, 0x0d);
 	else osd.printf("%c%5.2f%c%c", 0xbc, (double)osd_vbat_A, 0x0d, osd_battery_pic_A);
 	*/
-
-	batt_ch = 0xbc;
-	if (battv_A > 1.0 && osd_vbat_A < battv_A && blinker)
-		batt_ch = ' ';
-		
-	osd.printf("%c%5.2f%c", batt_ch, (double)osd_vbat_A, 0x0d);
+	osd.printf("%c%5.2f%c", 0xbc, (double)osd_vbat_A, 0x0d);
 	osd.closePanel();
 }
 
@@ -850,17 +812,9 @@ static char batt_ch;
 // Staus  : done
 
 void panBatt_B(int first_col, int first_line){
-static char batt_ch;
-
 	osd.setPanel(first_col, first_line);
 	osd.openPanel();
-
-	batt_ch = 0x60;
-	if (battv_B > 1.0 && osd_vbat_B < battv_B && blinker)
-		batt_ch = ' ';
-
-	osd.printf("%c%5.2f%c", batt_ch, (double)osd_vbat_B, 0x0d);
-	
+	osd.printf("%c%5.2f%c", 0x60, (double)osd_vbat_B, 0x0d);
 	osd.closePanel();
 }
 

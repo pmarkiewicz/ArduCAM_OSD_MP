@@ -82,6 +82,25 @@ void read_mavlink(){
 				chan8_raw = msg.channels_msg.channel[4];
 				osd_rssi = msg.channels_msg.rssi;
 				break;
+			case power_msg:
+#ifndef FLIGHT_BATT_ON_MINIMOSD
+				osd_vbat_A = msg.power_msg.vbat_A / 100.0f; //Battery voltage, in millivolts (1 = 1 millivolt)
+				//osd_curr_A = 0;
+                                //osd_vbat_B = 0;
+				//osd_battery_remaining_A = 0;
+				//Serial.println("====");
+#endif
+                                //temperature = msg.power_msg.vbat_A * 10;
+				break;
+			case climb_msg:
+				osd_climb = msg.climb_msg.climb;
+				//Serial.println("=====");
+				break;
+            case reset_msg:
+				//Reset_AVR(); // we cannot use WDT because of possible issues with bootloader
+                delay(500);
+                resetFunc();  //call reset
+                break;
 			default:
 				//Do nothing
 				break;
