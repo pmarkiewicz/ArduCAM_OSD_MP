@@ -61,7 +61,7 @@ void flight_batt_read(void)
 		osd_vbat_B	= voltage_b;
 
         //temperature     = CURRENT_TEMPERATURE(analogRead(TEMPERATURE_PIN), tempconv, tempconvAdd);
-        temperature     = analogRead(TEMPERATURE_PIN);
+        temperature     = analogRead(TEMPERATURE_PIN) * 0.1 + temperature * 0.9;
                 
 		if (current_calibration_A > 0.0) {								// Consider Amp sensor disbled when Amp per Volt ratio is zero
 			current_amps	= CURRENT_AMPS(analogRead(CURRENT_PIN), current_calibration_A) * 0.1 + current_amps * 0.9; 	// reads battery sensor current pin
