@@ -78,18 +78,30 @@ void setHomeVars(OSD &osd)
 }
 
 void setFdataVars(){
+static float last_lat = 0;
+static float last_lon = 0;
+static byte cnt = 0;
 
-	if (haltset == 1 && takeofftime == 0 && osd_alt_to_home > 5 && osd_throttle > 10){	// we started, haltset is 1 after stable alt is read and we are 5m above ground
+	if (haltset == 1 && takeofftime == 0 && osd_alt_to_home > 5 && osd_throttle > 10){	// we started, haltset is 1 after stable alt is read, and we are 5m above ground
 		takeofftime = 1;
 		tdistance = 0;
 		landed = 0;
 		FTime = (millis()/1000);	// used to calculate flight time
 	}
 
-    if (osd_alt_to_home <= 20 && osd_groundspeed <= 2 && osd_throttle <= 10 && takeofftime == 1 && osd_home_distance <= 100) {	// landed close to start
-		takeofftime = 0;
-        landed = millis();
-    }
+        if (last_lon != osd_lon && last_lat != osd_lat) { // we are moving
+            last_lon = osd_lon;
+            last_lat = osd_lat;
+            cnt = 0;
+        }
+        else {
+            cnt++;
+        }
+        
+        if (cnt > 20 && osd_throttle <= 12 && takeofftime == 1 && osd_home_distance <= 200) {	// landed close to start
+	    takeofftime = 0;
+            landed = millis();
+        }
         
 	if (osd_groundspeed > 1.0) tdistance += (osd_groundspeed * (millis() - runt) / 1000.0);
 	mah_used += (osd_curr_A * 10.0 * (millis() - runt) / 3600000.0);

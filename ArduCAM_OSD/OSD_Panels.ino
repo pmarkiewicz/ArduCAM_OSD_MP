@@ -1040,7 +1040,7 @@ static uint8_t mode_ch;
 			mode_ch = 0xB7;
 		}
 		
-		osd.printf("%c %2i %4.0f%c", mode_ch, wp_number, ((float)(wp_dist) * converth), high);
+		osd.printf("%c %2i %4.0f%c ", mode_ch, wp_number, ((float)(wp_dist) * converth), high);
 		// @ 11 32000m
 		
 	}else{

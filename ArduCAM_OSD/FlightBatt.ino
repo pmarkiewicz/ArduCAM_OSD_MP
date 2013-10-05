@@ -37,7 +37,7 @@ static float voltage_b = LOW_VOLTAGE * 1.05;	// battery voltage, initialized abo
 
 void flight_batt_init(void)
 {
-	analogReference(INTERNAL);			// INTERNAL: a built-in reference, equal to 1.1 volts on the ATmega168 or ATmega328
+    analogReference(INTERNAL);			// INTERNAL: a built-in reference, equal to 1.1 volts on the ATmega168 or ATmega328
     voltage_a = battv_A * 1.1;
     voltage_b = battv_B * 1.1; 
 }

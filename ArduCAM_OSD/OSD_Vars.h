@@ -23,7 +23,7 @@ static uint16_t     wp_dist = 0; // Distance to active MISSION in meters
 static uint8_t      wp_number = 0; // Current waypoint number
 //static float	    alt_error = 0; // Current altitude error in meters
 //static float        aspd_error = 0; // Current airspeed error in meters/second
-static float	    xtrack_error = 0; // Current crosstrack error on x-y plane in meters
+//static float	    xtrack_error = 0; // Current crosstrack error on x-y plane in meters
 static float        eff = 0; //Efficiency
 static uint8_t      panel_auto_switch=0;
 
