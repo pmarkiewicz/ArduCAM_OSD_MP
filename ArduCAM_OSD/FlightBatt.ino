@@ -40,6 +40,7 @@ void flight_batt_init(void)
     analogReference(INTERNAL);			// INTERNAL: a built-in reference, equal to 1.1 volts on the ATmega168 or ATmega328
     voltage_a = battv_A * 1.1;
     voltage_b = battv_B * 1.1; 
+    temperature = analogRead(TEMPERATURE_PIN);
 }
 
 void flight_batt_read(void)
